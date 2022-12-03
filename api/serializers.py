@@ -13,7 +13,7 @@ class ArticleSerializer(serializers.ModelSerializer):
 
     def get_your_rating(self, obj):
         try:
-            return ArticleRating.objects.get(article=obj, user=self.context["request"].user).rating
+            return obj.ratings.get().rating
         except Exception as e:
             return "-"
 

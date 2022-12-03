@@ -1,4 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import AnonymousUser
+from django.db.models import Prefetch
 from rest_framework import generics, mixins
 from rest_framework.generics import get_object_or_404
 
@@ -10,6 +12,12 @@ from .serializers import *
 class ArticleList(generics.ListAPIView):
     queryset = Article.objects.all().order_by('id')
     serializer_class = ArticleSerializer
+
+    def get_queryset(self):
+        return self.queryset.prefetch_related(Prefetch("ratings",
+                                                       queryset=ArticleRating.objects.filter(
+                                                           user=self.request.user if type(
+                                                               self.request.user) is not AnonymousUser else None)))
 
 
 class ArticleRatingCreateOrUpdate(LoginRequiredMixin, CreateOrUpdateAPIView):

@@ -14,7 +14,7 @@ class Article(models.Model):
 
 
 class ArticleRating(models.Model):
-    article = models.ForeignKey(Article, on_delete=models.CASCADE)
+    article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name="ratings")
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     rating = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)])
 
